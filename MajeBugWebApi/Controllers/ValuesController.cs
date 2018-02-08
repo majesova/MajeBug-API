@@ -7,13 +7,13 @@ using System.Web.Http;
 
 namespace MajeBugWebApi.Controllers
 {
-    [Authorize]
+   
     public class ValuesController : ApiController
     {
         // GET api/values
-        public IEnumerable<string> Get()
+        public IHttpActionResult Get()
         {
-            return new string[] { "value1", "value2" };
+            return Ok(new { Fecha = DateTime.Now, Campo1 = "1", Campo2 = "2"});
         }
 
         // GET api/values/5

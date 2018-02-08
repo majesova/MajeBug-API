@@ -37,6 +37,8 @@
             //tracking
             bug.HasRequired(x => x.CreatedBy).WithMany().HasForeignKey(x => x.CreatedById);
             bug.HasOptional(x => x.ModifiedBy).WithMany().HasForeignKey(x => x.ModifiedById);
+            //concurrency management
+            bug.Property(x => x.RowVersion).IsConcurrencyToken();
             
 
             var user = modelBuilder.Entity<User>();

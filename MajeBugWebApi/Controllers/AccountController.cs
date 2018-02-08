@@ -16,6 +16,9 @@ using Microsoft.Owin.Security.OAuth;
 using MajeBugWebApi.Models;
 using MajeBugWebApi.Providers;
 using MajeBugWebApi.Results;
+using MajeBug.Domain;
+using MajeBug.Data.Repositories;
+using MajeBug.Data;
 
 namespace MajeBugWebApi.Controllers
 {
@@ -328,16 +331,46 @@ namespace MajeBugWebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
+            //manage transactional operations
 
-            IdentityResult result = await UserManager.CreateAsync(user, model.Password);
+            //1 - OWIN transaction
+            var dbContext = HttpContext.Current.GetOwinContext().Get<ApplicationDbContext>();
+            //2. dataContext
+            var dataContext = new DataContext();
+            //Auto disposing
 
-            if (!result.Succeeded)
-            {
-                return GetErrorResult(result);
+            using (var tx = dbContext.Database.BeginTransaction()) {
+                var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
+                using(var tx2 = dataContext.Database.BeginTransaction()) { 
+
+                    IdentityResult result = await UserManager.CreateAsync(user, model.Password);
+
+                    if (!result.Succeeded)
+                    {
+                        return GetErrorResult(result);
+                    }
+                    else {
+                        try
+                        {
+                            var userApp = new User { Id = user.Id, DisplayName = model.Email, BirthDate = null, CreatedAt = DateTime.Now };
+                            var userRepository = new UserRepository(dataContext);
+                            userRepository.Insert(userApp);
+                            dataContext.SaveChanges();
+                            tx.Commit();
+                            tx2.Commit();
+                            tx2.Dispose();
+                            return Ok(userApp);
+                        }
+                        catch (Exception ex)
+                        {
+                            tx.Rollback();
+                            tx2.Rollback();
+                            return InternalServerError(ex);
+                        }
+                    }
+                }
             }
-
-            return Ok();
+           
         }
 
         // POST api/Account/RegisterExternal

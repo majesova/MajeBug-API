@@ -68,6 +68,10 @@
     <Compile Include="Migrations\201802081752376_User_Add_BirthDate.Designer.cs">
       <DependentUpon>201802081752376_User_Add_BirthDate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201802082312106_AddedRowVersionToBug.cs" />
+    <Compile Include="Migrations\201802082312106_AddedRowVersionToBug.Designer.cs">
+      <DependentUpon>201802082312106_AddedRowVersionToBug.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\BugRepository.cs" />
@@ -90,6 +94,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201802081752376_User_Add_BirthDate.resx">
       <DependentUpon>201802081752376_User_Add_BirthDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802082312106_AddedRowVersionToBug.resx">
+      <DependentUpon>201802082312106_AddedRowVersionToBug.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
