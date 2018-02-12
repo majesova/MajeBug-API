@@ -104,7 +104,7 @@ namespace MajeBugWebApi.Controllers
                 }
             }
             catch (DbUpdateConcurrencyException ex) {
-                return ResponseMessage(Request.CreateResponse(HttpStatusCode.Conflict, new { Message = "El registro ha sido modificado" }));
+                  return ResponseMessage(Request.CreateResponse(HttpStatusCode.Conflict, new { Message = "El registro ha sido modificado" }));
             }
 
         }

@@ -20,6 +20,8 @@ namespace MajeBugWebApi
         {
             var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<ApplicationDbContext>()));
             // Configure la lógica de validación de nombres de usuario
+            context.Response.Headers.Add("Access-Control-Allow-Origin", new[] { "*" });
+
             manager.UserValidator = new UserValidator<ApplicationUser>(manager)
             {
                 AllowOnlyAlphanumericUserNames = false,
